@@ -1,9 +1,10 @@
 var express = require('express');
+var fortuen = require('./lib/fortune.js');
 
 var app = express();
 
 // set up handlebars view engine
-var handlebars = require('express3-handlebars')
+var handlebars = require('express-handlebars')
 	.create({ defaultLayout:'main' });
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
@@ -24,9 +25,7 @@ app.get('/', function(req, res) {
 	res.render('home');
 });
 app.get('/about', function(req,res){
-	var randomFortune = 
-		fortuneCookies[Math.floor(Math.random() * fortuneCookies.length)];
-	res.render('about', { fortune: randomFortune });
+	res.render('about', { fortune.getFortune() });
 });
 
 // 404 catch-all handler (middleware)
