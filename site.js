@@ -1,5 +1,5 @@
 var express = require('express');
-var fortuen = require('./lib/fortune.js');
+var fortune = require('./lib/fortune.js');
 
 var app = express();
 
@@ -25,7 +25,8 @@ app.get('/', function(req, res) {
 	res.render('home');
 });
 app.get('/about', function(req,res){
-	res.render('about', { fortune.getFortune() });
+	res.render('about', { 
+		fortune: fortune.getFortune() } );
 });
 
 // 404 catch-all handler (middleware)
