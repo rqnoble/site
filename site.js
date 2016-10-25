@@ -4,8 +4,7 @@ var fortune = require('./lib/fortune.js');
 var app = express();
 
 // set up handlebars view engine
-var handlebars = require('express-handlebars')
-	.create({ defaultLayout:'main' });
+var handlebars = require('express-handlebars').create({ defaultLayout:'main' });
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 
@@ -13,21 +12,36 @@ app.set('port', process.env.PORT || 3000);
 
 app.use(express.static(__dirname + '/public'));
 
-var fortuneCookies = [
-	"Conquer your fears or they will conquer you.",
-	"Rivers need springs.",
-	"Do not fear what you don't know.",
-	"You will have a pleasant surprise.",
-	"Whenever possible, keep it simple.",
-];
+app.use(function(req, res, next){
+	console.log(res.locals.showTests);
+	res.locals.showTests = app.get('env') !== 'production' && 
+		req.query.test === '1';
+	next();
+});
 
 app.get('/', function(req, res) {
 	res.render('home');
 });
+
 app.get('/about', function(req,res){
 	res.render('about', { 
-		fortune: fortune.getFortune() } );
+		fortune: fortune.getFortune(),
+		pageTestScript: '/qa/tests-about.js'
+	} );
 });
+
+app.get('/tours/hood-river', function(req, res){
+	res.render('tours/hood-river');
+});
+
+app.get('/tours/oregon-coast', function(req, res){
+	res.render('tours/oregon-coast');
+});
+
+app.get('/tours/request-group-rate', function(req, res){
+	res.render('tours/request-group-rate');
+});
+
 
 // 404 catch-all handler (middleware)
 app.use(function(req, res, next){
